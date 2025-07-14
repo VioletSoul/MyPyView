@@ -10,6 +10,7 @@ class ImageViewer:
         self.root.title("Просмотрщик изображений")
         self.root.geometry("900x700")
         self.root.minsize(600, 400)
+        self.root.configure(bg="#222")
 
         style = ttk.Style()
         style.theme_use('clam')
@@ -18,18 +19,31 @@ class ImageViewer:
         self.index = 0
         self.fullscreen = False
 
-        self.frame = ttk.Frame(root)
-        self.frame.pack(fill="both", expand=True)
+        self.frame = ttk.Frame(root, padding=0, borderwidth=0, relief="flat")
+        self.frame.pack(fill="both", expand=True, padx=0, pady=0)
 
-        self.image_label = ttk.Label(self.frame, anchor="center", background="#222")
-        self.image_label.pack(fill="both", expand=True, padx=10, pady=10)
+        self.image_label = ttk.Label(
+            self.frame,
+            anchor="center",
+            background="#222",
+            borderwidth=0,
+            relief="flat"
+        )
+        self.image_label.pack(fill="both", expand=True, padx=0, pady=0)
         self.image_label.bind("<Double-Button-1>", self.toggle_fullscreen)
 
-        self.status_bar = ttk.Label(root, text="", anchor="w", relief="sunken")
+        self.status_bar = ttk.Label(
+            root,
+            text="",
+            anchor="w",
+            relief="sunken",
+            background="#222",
+            foreground="#fff"
+        )
         self.status_bar.pack(side="bottom", fill="x")
 
-        btn_frame = ttk.Frame(root)
-        btn_frame.pack(side="bottom", pady=5)
+        btn_frame = ttk.Frame(root, padding=0, borderwidth=0, relief="flat")
+        btn_frame.pack(side="bottom", pady=0)
 
         ttk.Button(btn_frame, text="Открыть папку", command=self.open_folder).pack(side="left", padx=5)
         ttk.Button(btn_frame, text="Назад", command=self.prev_image).pack(side="left", padx=5)
