@@ -14,20 +14,28 @@ class ImageViewer:
 
         style = ttk.Style()
         style.theme_use('clam')
+        style.configure('TFrame', background='#222')
+        style.configure('TLabel', background='#222', foreground='#fff')
+        style.configure('TButton',
+                        background='#333',
+                        foreground='#fff',
+                        borderwidth=0,
+                        focusthickness=3,
+                        focuscolor='none')
+        style.map('TButton',
+                  background=[('active', '#444')],
+                  foreground=[('active', '#fff')])
 
         self.images = []
         self.index = 0
         self.fullscreen = False
 
-        self.frame = ttk.Frame(root, padding=0, borderwidth=0, relief="flat")
+        self.frame = ttk.Frame(root, padding=0)
         self.frame.pack(fill="both", expand=True, padx=0, pady=0)
 
         self.image_label = ttk.Label(
             self.frame,
-            anchor="center",
-            background="#222",
-            borderwidth=0,
-            relief="flat"
+            anchor="center"
         )
         self.image_label.pack(fill="both", expand=True, padx=0, pady=0)
         self.image_label.bind("<Double-Button-1>", self.toggle_fullscreen)
@@ -36,13 +44,11 @@ class ImageViewer:
             root,
             text="",
             anchor="w",
-            relief="sunken",
-            background="#222",
-            foreground="#fff"
+            relief="sunken"
         )
         self.status_bar.pack(side="bottom", fill="x")
 
-        btn_frame = ttk.Frame(root, padding=0, borderwidth=0, relief="flat")
+        btn_frame = ttk.Frame(root, padding=0)
         btn_frame.pack(side="bottom", pady=0)
 
         ttk.Button(btn_frame, text="Открыть папку", command=self.open_folder).pack(side="left", padx=5)
