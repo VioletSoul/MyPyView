@@ -33,6 +33,7 @@ class ImageViewer:
         self.image_offset_y = 0
         self.drag_start = None
         self.drag_offset = (0, 0)
+        self.zoom_cache = {}
 
         # Menu
         menubar = tk.Menu(self.root, bg="#222", fg="#fff", activebackground="#333", activeforeground="#fff", tearoff=0)
@@ -70,8 +71,6 @@ class ImageViewer:
         self.thumb_canvas.bind('<Configure>', self._on_thumb_configure)
         self.thumb_canvas.config(xscrollincrement=1)
 
-        # Hide scrollbar (do not create it at all)
-
         # Status bar
         self.status_bar = tk.Label(
             self.root,
@@ -87,7 +86,7 @@ class ImageViewer:
         self._mouse_over_main = False
         self._mouse_over_thumb = False
 
-        self.thumb_offset = 0  # For conveyor effect
+        self.thumb_offset = 0
 
     def open_folder(self):
         folder = filedialog.askdirectory()
@@ -98,6 +97,7 @@ class ImageViewer:
             self.images.sort()
             self.index = 0
             self.thumb_offset = 0
+            self.zoom_cache = {}
             if self.images:
                 self._generate_thumbnails()
                 self.load_image()
@@ -140,7 +140,6 @@ class ImageViewer:
                 )
                 self.thumb_canvas.tag_bind(img_id, "<Button-1>", lambda e, idx=i: self._select_image(idx))
                 self.thumb_canvas.tag_bind(rect, "<Button-1>", lambda e, idx=i: self._select_image(idx))
-        # Draw center selection box
         box_x0 = center_x - THUMB_SIZE[0]//2 - THUMB_BORDER
         box_y0 = THUMB_MARGIN - THUMB_BORDER
         box_x1 = center_x + THUMB_SIZE[0]//2 + THUMB_BORDER
@@ -156,6 +155,7 @@ class ImageViewer:
             self.zoom = 1.0
             self.image_offset_x = 0
             self.image_offset_y = 0
+            self.zoom_cache = {}
             self.load_image()
             self.show_image()
             self._draw_thumbnails()
@@ -179,8 +179,16 @@ class ImageViewer:
         h = self.image_canvas.winfo_height()
         scale_w = max(1, int(self.original_size[0] * self.zoom))
         scale_h = max(1, int(self.original_size[1] * self.zoom))
-        img = self.original_image.copy()
-        img = img.resize((scale_w, scale_h), Image.NEAREST)
+        cache_key = (self.index, scale_w, scale_h)
+        if cache_key in self.zoom_cache:
+            img = self.zoom_cache[cache_key]
+        else:
+            img = self.original_image.copy()
+            img = img.resize((scale_w, scale_h), Image.NEAREST)
+            self.zoom_cache[cache_key] = img
+            if len(self.zoom_cache) > 10:
+                # Simple cache size limit
+                self.zoom_cache.pop(next(iter(self.zoom_cache)))
         self.photo = ImageTk.PhotoImage(img)
         x = (w - img.width) // 2 + self.image_offset_x
         y = (h - img.height) // 2 + self.image_offset_y
@@ -197,6 +205,7 @@ class ImageViewer:
             self.zoom = 1.0
             self.image_offset_x = 0
             self.image_offset_y = 0
+            self.zoom_cache = {}
             self.load_image()
             self.show_image()
             self._draw_thumbnails()
@@ -207,6 +216,7 @@ class ImageViewer:
             self.zoom = 1.0
             self.image_offset_x = 0
             self.image_offset_y = 0
+            self.zoom_cache = {}
             self.load_image()
             self.show_image()
             self._draw_thumbnails()
@@ -277,6 +287,7 @@ class ImageViewer:
             self.zoom = 1.0
             self.image_offset_x = 0
             self.image_offset_y = 0
+            self.zoom_cache = {}
             self.load_image()
             self.show_image()
             self._draw_thumbnails()
