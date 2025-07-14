@@ -1,4 +1,4 @@
-# MyPyView
+# ImageViewer
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python)
 ![Tkinter](https://img.shields.io/badge/GUI-Tkinter-FFB300?logo=python)
@@ -8,28 +8,40 @@
 ![Repo Size](https://img.shields.io/github/repo-size/VioletSoul/ImageViewer)
 ![Code Size](https://img.shields.io/github/languages/code-size/VioletSoul/ImageViewer)
 
-A fast, minimalistic, and stylish image viewer written in Python with Tkinter.  
-Navigate your photo folders with ease, enjoy a distraction-free dark interface, and control everything by mouse or keyboard.
+A minimalistic image viewer written in Python.  
+Inspired by Picasa and classic viewers, with a focus on convenience, a beautiful dark interface, and user-friendly navigation.
 
 ---
 
 ## Features
 
-- **Lightning-fast** image loading and navigation
-- **Modern dark interface** with no white borders
-- **Full keyboard and mouse support**
-    - Arrow keys for navigation
-    - Double-click for fullscreen, `Esc` to exit fullscreen
-- **Status bar** with filename and image count
-- **Automatic scaling** of images to fit the window
-- **Supports**: JPEG, PNG, GIF, BMP
-- **No external dependencies except Pillow**
+- **Image navigation** even in large folders
+- **Dark interface**: all elements styled, no white borders or scrollbars
+- **"Conveyor" thumbnail strip**:
+    - Thumbnails are always centered; the selection frame is fixed, and the strip scrolls smoothly left/right
+    - Mouse wheel scrolls through images, and the active thumbnail is always in the center
+- **Resizable viewing area**:
+    - The main image always stays centered
+    - When zoomed in, you can drag the image with the mouse
+- **Smooth zooming**:
+    - Zoom up to 400% (pixel-perfect, no smoothing for maximum speed)
+    - Mouse wheel over the main image zooms in/out
+    - Zoomed images are cached for performance
+- **Full keyboard and mouse support**:
+    - Arrow keys and mouse wheel for navigation
+    - Double-click for fullscreen, Esc to exit fullscreen
+- **No visible scrollbars**:
+    - Thumbnails are scrolled only with the mouse wheel
+- **Status bar**:
+    - Shows filename, image number, and zoom level
+- **Cross-platform**:
+    - Works on Windows, macOS, and Linux
 
 ---
 
 ## Screenshots
 
-<!-- Add screenshots here if available -->
+<!-- You can add screenshots here to illustrate the interface and features -->
 
 ---
 
@@ -41,32 +53,64 @@ Navigate your photo folders with ease, enjoy a distraction-free dark interface, 
 pip install pillow
 ```
 
+---
+
 ## Usage
 
-1. Save the script as `image_viewer.py`.
+1. Save the script as `viewer.py`.
 2. Run:
 ```
-python image_viewer.py
+python3 viewer.py
 ```
-3. Click **Open Folder** and select a directory with images.
-4. Navigate with the **arrow keys** or **buttons**.
-5. Double-click the image to enter fullscreen, press `Esc` to exit.
+3. Use the **File → Open Folder** menu to select a directory with images.
+4. Navigate images using:
+- Mouse wheel (over thumbnails or image)
+- Arrow keys
+- Clicking on thumbnails
+5. Zoom in/out:
+- Mouse wheel over the image, or use the **Scale** menu
+- Drag the image with the left mouse button when zoomed in
+6. Double-click the image to enter fullscreen, press `Esc` to exit.
 
 ---
 
-## Keyboard Shortcuts
+## Keyboard and Mouse Shortcuts
 
-| Key           | Action                  |
-|---------------|------------------------|
-| Left Arrow    | Previous image         |
-| Right Arrow   | Next image             |
-| Double-click  | Toggle fullscreen      |
-| Esc           | Exit fullscreen        |
+| Action                         | Shortcut/Mouse         |
+|---------------------------------|-----------------------|
+| Next/Previous image             | Mouse wheel (thumbnails), Left/Right arrow |
+| Zoom in/out                     | Mouse wheel (main image), Scale menu       |
+| Drag image (when zoomed)        | Hold and drag left mouse button            |
+| Fullscreen mode                 | Double-click main image                    |
+| Exit fullscreen                 | Esc                                        |
+| Open folder                     | File → Open Folder                         |
+
+---
+
+## Technical Details
+
+- **Performance**:
+- All scaled images are cached for instant re-display at the same zoom.
+- Thumbnails are rendered only once per folder.
+- **Thumbnail strip**:
+- Implemented as a single canvas for maximum speed.
+- No visible scrollbars; scrolling is smooth and instant.
+- **Image rendering**:
+- Uses `Image.NEAREST` for fast scaling and classic pixel look.
+- No smoothing for maximum performance at high zoom.
+- **Memory management**:
+- Cache for zoomed images is limited in size and resets when changing images.
+- **No external dependencies except Pillow**.
+
+---
+
+## Known Limitations
+
+- For extremely large images (e.g., >5000x5000 px), zooming and dragging may be less smooth due to Python/Tkinter limitations.
+- If you need even more performance and animation smoothness, consider PyQt, PySide, or Kivy.
 
 ---
 
 ## License
 
 MIT License
-
----
